@@ -1,0 +1,84 @@
+package com.datos;
+
+import java.sql.SQLException;
+
+import com.entidad.EntAlumno;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+public class Clasesql {
+	
+	private final Context context;
+	private Conexion cn;
+	private SQLiteDatabase db;
+	
+	public Clasesql(Context ctx){
+		this.context=ctx;
+	}
+	public Clasesql abrir()throws SQLException {
+		cn=new Conexion(context);
+		db=cn.getWritableDatabase();
+		return this;
+		
+	}
+	public void cerrar(){
+		cn.close();
+	}
+	
+	public ContentValues getContent(EntAlumno entAlumno){
+		ContentValues cv=new ContentValues();
+		cv.put("codigo", entAlumno.getCodigo());
+		cv.put("apellido", entAlumno.getApellidos());
+		cv.put("nombre", entAlumno.getNombre());
+		cv.put("edad", entAlumno.getEdad());
+		cv.put("sexo", entAlumno.getSexo());
+		
+		return cv;
+	}
+	
+	public Long ingreso(EntAlumno entAlumno){
+		ContentValues cv=new ContentValues();
+		cv.put("codigo",entAlumno.getCodigo());
+		cv.put("apellido", entAlumno.getApellidos());
+		cv.put("nombre", entAlumno.getNombre());
+		cv.put("edad", entAlumno.getEdad());
+		cv.put("sexo", entAlumno.getSexo());
+		return db.insert("alumno", null, cv);
+	}
+	
+	public String recibir(){
+		String[] columnas = new String[]{"Codigo","Apellido","Nombre","Edad","Sexo"};
+		Cursor cursor=db.query("alumno",columnas,null,null,null,null,null);
+		String resultado="";
+		
+		int indCodigo=cursor.getColumnIndex("codigo");
+		int indApe=cursor.getColumnIndex("apellido");
+		int indNom=cursor.getColumnIndex("nombre");	
+		int indEdad=cursor.getColumnIndex("edad");
+		int indSex=cursor.getColumnIndex("sexo");
+		
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()){
+			resultado+= cursor.getString(indCodigo)+" "+cursor.getString(indApe)+" "+
+		cursor.getString(indNom)+" "+cursor.getString(indEdad)+" "+cursor.getString(indSex)+"\n";
+		}
+		return resultado;
+		
+	}
+	
+	public void eliminar(String cod){
+		db.delete("alumno","codigo=?",new String[]{cod});
+	}
+	public void modificar(EntAlumno entAlum){
+		db.update("alumno",getContent(entAlum),"codigo=?",new String[]{entAlum.getCodigo()});
+		
+	}
+	
+	public Cursor busqueda(String cod){
+		Cursor fila=db.rawQuery("select apellido, nombre,edad,sexo from alumno where codigo =?", new String[]{cod});
+		return fila;
+	}
+
+}

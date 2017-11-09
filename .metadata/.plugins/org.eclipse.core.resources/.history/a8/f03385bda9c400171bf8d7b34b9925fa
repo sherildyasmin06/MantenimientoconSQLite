@@ -1,0 +1,14 @@
+package com.entidad;
+
+public class EntAlumno {
+
+	private String id;
+	private String codigo;
+	private String nombre;
+	private String apellidos;
+	private String edad;
+	private String sexo;
+	
+	
+	
+}

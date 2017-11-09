@@ -1,0 +1,71 @@
+package com.datos;
+
+import java.sql.SQLException;
+
+import com.entidad.EntAlumno;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+public class Clasesql {
+	
+	private final Context context;
+	private Conexion cn;
+	private SQLiteDatabase db;
+	
+	public Clasesql(Context ctx){
+		this.context=ctx;
+	}
+	public Clasesql abrir()throws SQLException {
+		cn=new Conexion(context);
+		db=cn.getWritableDatabase();
+		return this;
+		
+	}
+	public void cerrar(){
+		cn.close();
+	}
+	
+	public ContentValues getContent(EntAlumno entAlumno){
+		ContentValues cv=new ContentValues();
+		cv.put("codigo", entAlumno.getCodigo());
+		cv.put("nombre", entAlumno.getNombre());
+		cv.put("apellido", entAlumno.getApellidos());
+		cv.put("edad", entAlumno.getEdad());
+		cv.put("sexo", entAlumno.getSexo());
+		
+		return cv;
+	}
+	
+	public Long ingreso(EntAlumno entAlumno){
+		ContentValues cv=new ContentValues();
+		cv.put("codigo",entAlumno.getCodigo());
+		cv.put("nombre", entAlumno.getNombre());
+		cv.put("apellido", entAlumno.getApellidos());
+		cv.put("edad", entAlumno.getEdad());
+		cv.put("sexo", entAlumno.getSexo());
+		return db.insert("alumno", null, cv);
+	}
+	
+	public String recibir(){
+		String[] columnas = new String[]{"Codigo","Nombre","Apellido","Edad","Sexo"};
+		Cursor cursor=db.query("alumno",columnas,null,null,null,null,null);
+		String resultado="";
+		
+		int indCodigo=cursor.getColumnIndex("codigo");
+		int indNom=cursor.getColumnIndex("nombre");
+		int indApe=cursor.getColumnIndex("apellido");
+		int indEdad=cursor.getColumnIndex("edad");
+		int indSex=cursor.getColumnIndex("sexo");
+		
+		for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()){
+			resultado+= cursor.getString(indCodigo)+" "+cursor.getString(indNom)+" "+
+		cursor.getString(indApe)+" "+cursor.getString(indEdad)+" "+cursor.getString(indSex)+"\n";
+		}
+		return resultado;
+		
+	}
+
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mantenimiento</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_ingreso">Ingreso de Alumnos</string>
+    <string name="tcodigo">CODIGO:</string>
+    <string name="tapellidos">APELLIDOS:</string>
+    <string name="tnombres">NOMBRES:</string>
+    <string name="tedad">EDAD:</string>
+
+</resources>
